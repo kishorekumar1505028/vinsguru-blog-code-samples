@@ -11,7 +11,7 @@ public class GPSServer {
 
         // build gRPC server
         Server server = ServerBuilder.forPort(6565)
-                .addService(new NavigationService())
+                .addService(new ASRClientService())
                 .build();
 
         // start

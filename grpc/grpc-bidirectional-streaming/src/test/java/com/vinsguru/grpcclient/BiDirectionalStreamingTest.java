@@ -14,15 +14,14 @@ public class BiDirectionalStreamingTest {
     private ManagedChannel channel;
     private NavigationServiceGrpc.NavigationServiceStub clientStub;
 
-    @Before
-    public void setup(){
+
+    public  void setup(){
         this.channel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext()
                 .build();
         this.clientStub = NavigationServiceGrpc.newStub(channel);
     }
 
-    @Test
     public void tripTest() throws InterruptedException {
         TripResponseStreamObserver tripResponseStreamObserver = new TripResponseStreamObserver();
         StreamObserver<TripRequest> requestStreamObserver = this.clientStub.navigate(tripResponseStreamObserver);
@@ -32,9 +31,20 @@ public class BiDirectionalStreamingTest {
         Thread.sleep(100000);
     }
 
-    @After
     public void teardown(){
         this.channel.shutdown();
+    }
+
+    public void main(String[] args) {
+
+        this.setup();
+        try {
+            this.tripTest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.teardown();
+
     }
 
 }

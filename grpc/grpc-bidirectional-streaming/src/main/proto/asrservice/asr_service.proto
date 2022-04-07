@@ -1,0 +1,42 @@
+syntax = "proto3";
+package asrservice;
+
+option java_multiple_files = true;
+option java_package = "com.vinsguru.asrservice";
+// define the service
+service ASRService{
+    // Audio file transcription 
+    rpc HiHello (Transcript) returns (Transcript){}
+    rpc TranscribeFile (Audio) returns (Transcript){}
+
+    // Audio stream transcription
+    rpc SetAudioConfig (AudioConfig) returns (Reply){}
+    rpc TranscribeStream (stream Audio) returns (stream Transcript){}
+
+    // Streaming in streaming out
+    rpc TranscribeStreamTest (stream Audio) returns (stream Transcript){}
+}
+
+// Audio configaration
+message AudioConfig{
+    int32 sample_rate = 1;
+    int32 bit_depth = 2;
+    int32 num_channels = 3;
+}
+
+// Reply message
+message Reply{
+    string message = 1;
+}
+
+// The audio message
+message Audio{
+    bytes data = 1;
+    int32 sample_rate = 2;
+    int32 chunk_number = 3;
+}
+
+// The transcript message
+message Transcript{
+    string transcript = 1;
+}
