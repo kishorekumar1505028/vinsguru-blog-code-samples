@@ -22,7 +22,7 @@ public class AudioObserver implements StreamObserver<Audio> {
         // client has not yet reached destination
 
         Transcript transcript = Transcript.newBuilder()
-                .setTranscript("ok: " + audio.getChunkNumber() + "; " + audio.getData().size() )
+                .setTranscript("ওকে: " + audio.getChunkNumber() + "; " + audio.getData().size() )
                 .build();
         this.transcriptStreamObserver.onNext(transcript);
     }

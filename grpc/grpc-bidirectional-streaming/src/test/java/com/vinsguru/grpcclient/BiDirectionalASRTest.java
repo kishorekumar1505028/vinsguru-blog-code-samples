@@ -15,6 +15,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.*;
+import java.time.LocalTime;
 
 
 public class BiDirectionalASRTest {
@@ -91,9 +92,13 @@ public class BiDirectionalASRTest {
 
 
     public void setup(){
-        this.channel = ManagedChannelBuilder.forAddress("dev.revesoft.com", 5090)
+        //localhost, 6565
+        this.channel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext()
                 .build();
+//        this.channel = ManagedChannelBuilder.forAddress("localhost", 6565)
+//                .usePlaintext()
+//                .build();
         this.clientStub = ASRServiceGrpc.newStub(channel);
     }
 
@@ -104,9 +109,9 @@ public class BiDirectionalASRTest {
         byte[][] ret = divideArray(audio);
         int ln = ret.length;
         int i = 0 ;
-        for (i = 0 ; i < 1; i++) {
-            transcriptStreamObserver.startAudio(ret[i], i, (int) sampleRate, requestStreamObserver);
-        }
+        System.out.println("");
+        transcriptStreamObserver.startAudio(ret, (int) sampleRate, requestStreamObserver);
+
 
         // just for testing
         Thread.sleep(3000);
