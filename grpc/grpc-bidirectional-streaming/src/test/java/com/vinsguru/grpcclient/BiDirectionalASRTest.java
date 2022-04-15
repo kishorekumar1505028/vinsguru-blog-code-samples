@@ -32,33 +32,42 @@ public class BiDirectionalASRTest {
     public static byte[] processAudioOffline ()
     {
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         BufferedInputStream in = null;
-
         try {
-            in = new BufferedInputStream(new FileInputStream(WAV_FILE));
 
-            AudioInputStream inputStream =
-                    AudioSystem.getAudioInputStream(in);
+            FileInputStream inputStream = new FileInputStream(WAV_FILE);
+
+
             int numBytes = inputStream.available();
-
-            AudioFormat audioFormat = inputStream.getFormat();
+            in = new BufferedInputStream(new FileInputStream(WAV_FILE));
+            System.out.println("size" + numBytes);
+            AudioInputStream audioInputStream =
+                    AudioSystem.getAudioInputStream(in);
+            AudioFormat audioFormat = audioInputStream.getFormat();
             sampleRate = audioFormat.getSampleRate();
             bits_per_sample = audioFormat.getSampleSizeInBits();
             num_channels = audioFormat.getChannels();
             chunkSize = (int) (0.03 * bits_per_sample * num_channels * sampleRate / 8);
 
             byte[] buffer = new byte[numBytes];
-            System.out.println(numBytes);
+
+
+
             inputStream.read(buffer, 0, numBytes);
+            File myObj = new File("src/main/resources/test_audio/bytes_new.txt");
+            System.out.println("ok : " + numBytes + " " + chunkSize + " " + buffer.length);
+
             byte[] data1 = new byte[buffer.length - 44];
             System.arraycopy(buffer, 44, data1, 0, buffer.length - 44);
-            return data1;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
+            if (myObj.createNewFile()) {
+                System.out.println("File created: " + myObj.getName());
+
+                FileOutputStream fileOutputStream  = new FileOutputStream(myObj);
+                fileOutputStream.write(data1);
+            }
+            System.out.println(buffer.length);
+            return buffer;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -93,12 +102,10 @@ public class BiDirectionalASRTest {
 
     public void setup(){
         //localhost, 6565
-        this.channel = ManagedChannelBuilder.forAddress("localhost", 6565)
+        //"dev.revesoft.com", 5090
+        this.channel = ManagedChannelBuilder.forAddress("dev.revesoft.com", 5090)
                 .usePlaintext()
                 .build();
-//        this.channel = ManagedChannelBuilder.forAddress("localhost", 6565)
-//                .usePlaintext()
-//                .build();
         this.clientStub = ASRServiceGrpc.newStub(channel);
     }
 
@@ -114,7 +121,7 @@ public class BiDirectionalASRTest {
 
 
         // just for testing
-        Thread.sleep(3000);
+        Thread.sleep(100);
     }
 
     public void teardown(){

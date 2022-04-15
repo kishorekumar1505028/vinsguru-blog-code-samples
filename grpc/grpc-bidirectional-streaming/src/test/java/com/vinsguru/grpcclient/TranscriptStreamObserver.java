@@ -19,12 +19,12 @@ public class TranscriptStreamObserver implements StreamObserver<Transcript> {
 
     @Override
     public void onNext(Transcript transcript) {
-        if(!transcript.getTranscript().equals("")){
-            print(transcript);
-            System.out.println(Arrays.toString(transcript.getTranscript().getBytes(StandardCharsets.UTF_8)));
-        }else{
-            this.requestStreamObserver.onCompleted();
-        }
+        print(transcript);
+//        if(!transcript.getTranscript().equals("")){
+//            print(transcript);
+//        }else {
+//            print(transcript);
+//        }
     }
 
     @Override
@@ -48,12 +48,22 @@ public class TranscriptStreamObserver implements StreamObserver<Transcript> {
     private void drive(byte[] data, int i, int sampleRate){
         Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
         Audio audio = Audio.newBuilder().setData(ByteString.copyFrom(data)).setChunkNumber(i).setSampleRate(sampleRate).build();
+        printAudio(audio);
         requestStreamObserver.onNext(audio);
     }
 
     private void print(Transcript transcript){
         System.out.println(LocalTime.now() + ": Received transcript : " + transcript.getTranscript());
-        System.out.println("------------------------------");
+        System.out.println("------------------------------transcript bytes-----------------------");
+        System.out.println(Arrays.toString(transcript.getTranscript().getBytes()));
+        System.out.println("------------------------------------------------------------");
+
+    }
+    private void printAudio(Audio audio){
+        System.out.println(LocalTime.now() + ": Sending audio chunk : " + audio.getChunkNumber());
+        System.out.println("------------------------------audio bytes-----------------------");
+        System.out.println(audio.getData());
+        System.out.println("------------------------------------------------------------");
     }
 
 }

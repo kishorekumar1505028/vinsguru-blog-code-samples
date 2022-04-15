@@ -20,7 +20,7 @@ public class AudioObserver implements StreamObserver<Audio> {
     public void onNext(Audio audio) {
 
         // client has not yet reached destination
-
+        System.out.println("received audio chunk" + audio.getChunkNumber() + "from client");
         Transcript transcript = Transcript.newBuilder()
                 .setTranscript("ওকে: " + audio.getChunkNumber() + "; " + audio.getData().size() )
                 .build();

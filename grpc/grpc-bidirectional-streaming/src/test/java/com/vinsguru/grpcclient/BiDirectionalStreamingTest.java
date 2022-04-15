@@ -28,7 +28,7 @@ public class BiDirectionalStreamingTest {
         tripResponseStreamObserver.startTrip(requestStreamObserver);
 
         // just for testing
-        Thread.sleep(100000);
+        Thread.sleep(1000);
     }
 
     public void teardown(){
